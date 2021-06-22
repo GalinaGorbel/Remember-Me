@@ -11,7 +11,7 @@
       >Add Resource</base-button
     >
   </base-card>
-  <component :is="selectedTabs"></component>
+  <component :is="selectedTab"></component>
 </template>
 
 <script>
@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      selectedTabs: 'stored-resources',
+      selectedTab: 'stored-resources',
       storedResources: [
         {
           id: 'official-guide',
@@ -44,20 +44,31 @@ export default {
   },
   methods: {
     setSelectedTab(tab) {
-      this.selectedTabs = tab;
+      this.selectedTab = tab;
+    },
+    addResource(title, description, url) {
+      const newResorce = {
+        id: new Date().toISOString(),
+        title: title,
+        description: description,
+        link: url,
+      };
+      this.storedResources.unshift(newResorce);
+      this.selectedTab = 'stored-resources';
     },
   },
   computed: {
     storedResButtonMode() {
-      return this.selectedTabs === 'stored-resources' ? null : 'flat';
+      return this.selectedTab === 'stored-resources' ? null : 'flat';
     },
     addResButtonMode() {
-      return this.selectedTabs === 'add-resource' ? null : 'flat';
+      return this.selectedTab === 'add-resource' ? null : 'flat';
     },
   },
   provide() {
     return {
       resources: this.storedResources,
+      addResource: this.addResource,
     };
   },
 };
